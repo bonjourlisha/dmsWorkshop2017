@@ -12,7 +12,7 @@
 4. Navigate to one of the example files:
     * `annualChartSimple.html`
     * `griddedChartSimple.html`
-5. Open Chrome Developer Tools (Windows: `Ctrl + Shift + i`, Mac: `Cmd + Option + i`).
+5. Open Chrome Developer Tools (Windows: `Ctrl + Shift + j`, Mac: `Cmd + Option + j`).
 
 
 ## Optional
