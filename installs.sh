@@ -17,5 +17,8 @@ nvm install node
 # http-server
 npm install -global http-server
 
+# automate the creation of a http-server alias
+
+
 
 
