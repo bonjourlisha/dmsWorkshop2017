@@ -1,6 +1,6 @@
 # Instructions 
 
-1. [Clone](https://help.github.com/articles/cloning-a-repository/) or simply download this repository as a `.zip` file to your computer. If you downloaded as a `.zip`, extract these files.
+1. [Clone](https://help.github.com/articles/cloning-a-repository/) or [simply download this repository as a `.zip` file](https://github.com/eco-envolventes/dmsWorkshop2017/archive/master.zip) to your computer. If you downloaded as a `.zip`, extract these files.
 2. Get local server running using:
     * Windows: 
         * Install: USBWebServer
