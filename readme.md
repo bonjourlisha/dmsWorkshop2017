@@ -13,3 +13,8 @@
     * `griddedChartSimple.html`
 5. Open Chrome Developer Tools (Windows: `Ctrl + Shift + i`, Mac: `Cmd + Option + i`).
 
+
+## Optional
+
+* Install [Sublime Text 3 text editor](https://www.sublimetext.com/3).
+
