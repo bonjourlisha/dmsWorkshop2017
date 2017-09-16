@@ -18,4 +18,4 @@
 ## Optional
 
 * Install [Sublime Text 3 text editor](https://www.sublimetext.com/3).
-
+* Windows: Install [Git Bash](https://git-scm.com/download/win) to use git from the command line in a Unix-style way.
