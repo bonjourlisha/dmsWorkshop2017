@@ -2,7 +2,8 @@
 
 1. Clone or download this repository to your computer.
 2. Get local server running using:
-    * Windows: USB Server
+    * Windows: 
+        * Install: USBWebServer
     * Mac: 
         * Install [`node.js`](https://nodejs.org/dist/v6.11.3/node-v6.11.3.pkg)
         * Install `http-server` by running: `npm install -global http-server` in Terminal.
