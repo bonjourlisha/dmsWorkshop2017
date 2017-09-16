@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        
+        <title>Gridded data</title>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+        <script src="https://d3js.org/topojson.v2.min.js"></script>
+    </head>
+<body>
+    <div id = "map"></div>
+    <script type="text/javascript">
+var projection;
+var svgMap;
+var w = 800;
+var h = 850;
+var dataset=[];
+var classificationData;
+var currentClassification = "climateDataAverages";//could be climateDataAverages","koppenGeigerDataAverage","holdridgeDataAverage","climateStatsAverages"
+//koppenGeigerDataAverage","holdridgeDataAverage will need handling differently as some data is text not numeric
+var classificationNum =0;
+var fieldNum =0;
+var dataFields;
+setUp();
+readFile();
+getData("colombiaAverages.json");//franceAverages.json
+
+function setUp(){
+	//define projection
+	projection = d3.geoMercator()
+	.center([-69.5,7.7])//fra 5,48.204
+	.scale([2700]);
+	//define svg 
+	svgMap = d3.select("#map")
+	.append("svg")
+	.attr("width",w)
+	.attr("height",h);
+}
+function readFile()
+{
+	d3.queue()
+	.defer(d3.json,"maps/COL_adm0.json")//maps/FRA_adm0.json
+	.await(mapData)
+}
+
+function mapData(error,data){
+	if(error) throw error;
+	console.log(data);
+	//for a topojson format map
+	var path = d3.geoPath()
+    .projection(projection);
+	
+	svgMap.append("path")
+	.attr("fill","none")
+	.attr("stroke", "black")
+    .attr("stroke-width", 0.25)
+    .attr("d",path(topojson.mesh(data,data.objects.COL_adm0)));
+
+}
+
+function getData(file)
+{
+	d3.queue()
+    .defer(d3.json, file)
+    .await(process);
+    //call the grid mapping only when the data has loaded
+}
+function process(error, data)
+{
+	if (error) throw error;
+  	console.log(data);
+  	classificationData =data;
+  	dataFields= classificationData.dataFields[classificationNum][currentClassification];
+	getCellData();
+	chartUpdate();
+	
+}
+function getCellData()
+{
+	//get the data for a classification type
+	dataset=[];
+	var pts = classificationData.gridPoints;
+	for(var i=0;i<pts.length;i++){
+		var d = pts[i][currentClassification];
+		
+		dataset.push({lat:pts[i].location.latitude,lon:pts[i].location.longitude,alt:pts[i].alt,data: d});
+	}
+	
+}
+function defineCell(d){
+	//this handles the projection for each cell
+  var cell=[];
+  var p1 = projection([d.lon,d.lat]);
+  var p2 = projection([d.lon+0.5,d.lat]);
+  cell[0] = Math.round(Math.abs(p1[0]-p2[0]));
+  p2 = projection([d.lon,d.lat+0.5]);
+  cell[1] = Math.round(Math.abs(p1[1]-p2[1]));
+  return cell;
+}
+function chartUpdate(){
+  // remove previous
+  d3.selectAll(".mapBlocks").remove();
+
+ var  rects=svgMap.selectAll("rect")
+    .data(dataset,function(d){return d;})
+    .enter()
+   .append("rect")
+   .attr("x", function (d) { return projection([d.lon-0.25,d.lat+0.25])[0];})
+   .attr("y", function (d) { return projection([d.lon-0.25,d.lat+0.25])[1];})
+   .attr("width", function(d){return defineCell(d)[0];})
+   .attr("height", function(d){return defineCell(d)[1];})
+   .attr("fill-opacity",0.8)
+   .attr("fill",function (d) {return getColorSpectral(getValueFromCell(d));} )
+   .attr("class","mapBlocks");
+}
+
+function getValueFromCell(d){
+	var n;
+	var p;
+	var year =0;//we could have a rnage of years
+	var month =0;
+	switch(currentClassification) {
+    case "climateDataAverages":
+    	//only one year but months and fields
+        n = d.data[year][fieldNum][month];
+        break;
+    case "climateStatsAverages":
+    	//only one year but months and fields
+        n = d.data[year][fieldNum];
+        break;
+    default:
+    	//the classifications
+        n = d.data[year][fieldNum];
+	}
+	return n;
+}
+function getColorSpectral(t){
+
+var cScale = d3.scaleLinear()
+ .domain([dataFields[fieldNum].min,dataFields[fieldNum].max])
+ .range([1, 0]);
+
+  return d3.interpolateSpectral(cScale(t));
+}
+    </script>

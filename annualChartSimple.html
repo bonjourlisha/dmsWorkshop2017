@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        
+        <title>Weather data chart</title>
+        <script src="https://d3js.org/d3.v4.min.js"></script>
+        <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+        
+    </head>
+<body>
+    <div id = "chart"></div>
+    <script type="text/javascript">
+
+var w = 800;
+var h = 500;
+var padding =40;
+var dataset=[];
+var climateObj;
+var units;
+var minField;
+var maxField;
+getData();
+
+function getData(){
+    d3.queue()
+    .defer(d3.json, "COL/COL_Bogota.json")
+    .await(process);
+}
+function process(error, data){
+    if (error) throw error;
+    console.log(data);
+    //when data loads 
+    climateObj =data;
+    setSvg();
+    drawAxes();
+    selectAnnualChartData(0);
+    chart();
+}
+function setSvg(){
+    svgChart = d3.select("#chart")
+      .append("svg")
+      .attr("width", w+padding)
+      .attr("height", h+padding);
+}
+function drawAxes(){
+
+//x axis
+    svgChart.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(0," + (h ) + ")")
+    .call(d3.axisBottom(xScale)
+    .ticks(10));   
+
+// text label for the x axis
+    svgChart.append("text")             
+    .attr("transform","translate(" + (w/2) + " ," + (h) + ")")
+    .style("text-anchor", "middle")
+    .text("Day");
+
+//y axis
+    svgChart.append("g")
+    .attr("class", "axis")
+    .attr("transform", "translate(" + (w ) +",0 )")
+    .call(d3.axisRight(yScale).ticks(5));
+
+ // text label for the y axis
+    svgChart.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", w)
+    .attr("x",-h/2 )
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .text("Hour");  
+
+}
+function chart(){
+  var rectW = (w)/365;
+  var rectH = (h)/24;
+  //DATA JOIN see https://bl.ocks.org/mbostock/3808218
+    var rects=svgChart.selectAll("rect")
+    .data(dataset,function(d){return d;});
+
+    //ENTER and create new stuff
+    rects.enter()
+    .append("rect")
+    .attr("x", function(d){return xScale(d.day);})
+    .attr("y", function(d){return yScale(d.hour);})
+    .attr("width", rectW)
+    .attr("height",rectH)
+    .attr("fill", function(d) {return getColorSpectral(d.field);});
+    
+    // EXIT
+    // Remove old elements as needed.
+    rects.exit().remove();
+}
+function getColorSpectral(t){
+
+    var cScale = d3.scaleLinear()
+     .domain([minField,maxField])
+     .range([1, 0]);
+    return d3.interpolateSpectral(cScale(t));
+}
+
+//Create scale functions
+var xScale = d3.scaleLinear()
+ .domain([0, 365])
+ .range([0, w ]);
+
+var yScale = d3.scaleLinear()
+ .domain([24,0])
+ .range([h ,0]);
+
+function selectAnnualChartData(datafieldIndex){
+  dataset=[];
+  var datafields = climateObj.hourlyDataFields;
+  var day=0;
+  var hour=0;
+ 
+  for(var i=0;i<climateObj.hourlyData.length;i++){
+    var val = climateObj.hourlyData[i][datafieldIndex];
+      dataset.push({"day":day,"hour":hour,"field":val});
+      hour++;
+      if(hour==24){
+        hour=0;
+        day++;
+      }
+    }
+  units = datafields[datafieldIndex].units;
+  maxField = datafields[datafieldIndex].max;
+  minField = datafields[datafieldIndex].min;
+}
+    </script>
+</body>
+</html>  
