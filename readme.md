@@ -18,4 +18,6 @@
 ## Optional
 
 * Install [Sublime Text 3 text editor](https://www.sublimetext.com/3) for convenient code editing with nice syntax highlighting, coding-related typing features, and lots of useful external packages. (Free)
-* Windows: Install [Git Bash](https://git-scm.com/download/win) to use git from the command line in a Unix-style way. (Free)
+* Windows: 
+   * Install [`posh-git`](https://git-scm.com/book/tr/v2/Git-in-Other-Environments-Git-in-Powershell) to use `git` in Windows Powershell.
+   * Install [Git Bash](https://git-scm.com/download/win) to use git from the command line in a Unix-style way. (Free)
