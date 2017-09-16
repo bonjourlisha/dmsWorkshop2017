@@ -12,10 +12,12 @@
 4. Navigate to one of the example files:
     * `annualChartSimple.html`
     * `griddedChartSimple.html`
-5. Open Chrome Developer Tools (Windows: `Ctrl + Shift + j`, Mac: `Cmd + Option + j`).
+5. Open Chrome Developer Tools (Windows: `Ctrl + Shift + J`, Mac: `Cmd + Option + J`).
 
 
 ## Optional
 
 * Install [Sublime Text 3 text editor](https://www.sublimetext.com/3) for convenient code editing with nice syntax highlighting, coding-related typing features, and lots of useful external packages. (Free)
-* Windows: Install [Git Bash](https://git-scm.com/download/win) to use git from the command line in a Unix-style way. (Free)
+* Windows: 
+   * Install [`posh-git`](https://git-scm.com/book/tr/v2/Git-in-Other-Environments-Git-in-Powershell) to use `git` in Windows Powershell.
+   * Install [Git Bash](https://git-scm.com/download/win) to use git from the command line in a Unix-style way. (Free)
